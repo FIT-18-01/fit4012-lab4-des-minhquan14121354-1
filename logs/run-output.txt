@@ -1,0 +1,2 @@
+Ví dụ đầu ra chạy (chưa có):
+Chạy Mode 1 trên plaintext mẫu đã tạo ciphertext. Thay file này bằng đầu ra thực tế khi bạn chạy các test cục bộ hoặc CI.

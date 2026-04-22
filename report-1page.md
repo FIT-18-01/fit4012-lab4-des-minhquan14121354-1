@@ -1,17 +1,21 @@
-# Report 1 page - Lab 4 DES / TripleDES
+# Báo cáo 1 trang - Lab 4 DES / TripleDES
 
 ## Mục tiêu
 
-TODO_STUDENT: Viết ngắn gọn mục tiêu của bài lab.
+Triển khai DES và TripleDES theo hợp đồng đầu vào/đầu ra để CI có thể kiểm tra. Hỗ trợ mã hoá/giải mã DES (multi-block với zero-padding) và TripleDES (E(K3, D(K2, E(K1,P))) / ngược lại).
 
-## Cách làm / Method
+## Cách làm / Phương pháp
 
-TODO_STUDENT: Mô tả em đã làm gì với file code gốc, bổ sung những chức năng nào, cấu trúc chương trình ra sao.
+- Thêm logic đọc stdin để nhận mode và dữ liệu theo README.
+- Hoàn thiện KeyGenerator để sinh 16 round key theo PC-1/PC-2 và dịch trái.
+- Dùng lớp DES để thực hiện 16 vòng Feistel với expansion, S-box và permutation.
+- Tái sử dụng hàm encrypt với round key đảo chiều để thực hiện giải mã.
 
-## Kết quả / Result
+## Kết quả
 
-TODO_STUDENT: Trình bày kết quả chạy chương trình, test chính, trường hợp đúng/sai, ví dụ ciphertext hoặc round-trip.
+- Chương trình in kết quả cuối cùng ở dạng chuỗi nhị phân, phù hợp cho CI.
+- Đã thêm test mẫu trong thư mục tests/ để kiểm tra: mẫu encrypt, round-trip, multi-block/padding, tamper negative, wrong-key negative.
 
-## Kết luận / Conclusion
+## Kết luận
 
-TODO_STUDENT: Nêu điều học được, hạn chế hiện tại, và hướng mở rộng như decryption / TripleDES / multi-block.
+Triển khai đã đáp ứng các yêu cầu cơ bản để CI kiểm tra. Hạn chế: dùng zero-padding (không an toàn cho production); TripleDES hiện chỉ hỗ trợ single-block theo hợp đồng; không lưu metadata độ dài plaintext. Hướng mở rộng: thêm padding PKCS, hỗ trợ TripleDES multi-block, cải thiện giao diện.

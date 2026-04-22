@@ -1,0 +1,3 @@
+Kiểm thử tamper (chưa có):
+Lật một bit trong ciphertext rồi giải mã. Mong rằng plaintext phục hồi sẽ khác với bản gốc.
+Thay bằng đầu ra thực tế của tests/test_tamper_negative.sh

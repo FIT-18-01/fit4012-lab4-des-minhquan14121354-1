@@ -57,33 +57,46 @@ cmake --build build
 
 ## 3. Input / Đầu vào
 
-TODO_STUDENT: Mô tả rõ đầu vào của chương trình sau khi em hoàn thiện bài lab.
+Chương trình này tuân thủ quy chuẩn nộp bài được sử dụng bởi hệ thống CI (Tích hợp liên tục). Chương trình sẽ đọc dữ liệu từ đầu vào tiêu chuẩn (stdin) theo thứ tự như sau:
 
-Gợi ý nên nêu:
-- plaintext đang được nhập như thế nào
-- key đang được nhập như thế nào
-- chương trình nhận 1 block hay nhiều block
-- định dạng dữ liệu là chuỗi bit, chuỗi ký tự hay file
+- Giá trị đầu tiên: Chế độ (số nguyên)
+  - 1 = Mã hóa DES
+  - 2 = Giải mã DES
+  - 3 = Mã hóa TripleDES (3DES)
+  - 4 = Giải mã TripleDES (3DES)
+
+Tùy thuộc vào chế độ bạn chọn ở trên, bạn sẽ cần nhập tiếp các thông tin tương ứng:
+
+- Chế độ 1 (Mã hóa DES): văn bản gốc (chuỗi nhị phân, độ dài bất kỳ), khóa (chuỗi nhị phân 64-bit).
+- Chế độ 2 (Giải mã DES): bản mã (chuỗi nhị phân, ưu tiên độ dài là bội số của 64), khóa (chuỗi nhị phân 64-bit).
+- Chế độ 3 (Mã hóa TripleDES): văn bản gốc (chuỗi nhị phân 64-bit), khóa K1 (64-bit), khóa K2 (64-bit), khóa K3 (64-bit).
+- Chế độ 4 (Giải mã TripleDES): bản mã (chuỗi nhị phân 64-bit), khóa K1, K2, K3.
+
+Notes:
+- Plaintext và các khóa (keys) phải được cung cấp dưới dạng các chuỗi chỉ chứa ký tự '0' và '1'. Các khóa nên có độ dài 64 bit để quá trình lập lịch khóa (key scheduling) diễn ra chính xác.
+- Đối với Chế độ 1, chương trình chấp nhận văn bản gốc (plaintext) có độ dài bất kỳ và tự động chia văn bản đó thành các khối (blocks) 64-bit.
 
 ## 4. Output / Đầu ra
 
-TODO_STUDENT: Mô tả rõ đầu ra của chương trình.
+Chương trình in kết quả cuối cùng ra stdout dưới dạng một chuỗi nhị phân duy nhất (chỉ gồm ký tự '0' và '1'). Đây là chuỗi mà CI sẽ trích xuất và so sánh.
 
-Gợi ý nên nêu:
-- ciphertext hiển thị ra sao
-- có in round keys hay không
-- có hỗ trợ giải mã hay không
-- với TripleDES thì đầu ra gồm những gì
+Chi tiết:
+- DES mã hoá (Mode 1): in ra chuỗi ciphertext là kết quả nối các block (một chuỗi nhị phân). Không in thêm dòng debug hay prompt.
+- DES giải mã (Mode 2): in ra plaintext đã phục hồi (nối các block đã giải mã). Lưu ý có thể có zero-padding ở cuối nếu plaintext gốc không chia hết cho 64.
+- TripleDES (Mode 3 và 4): in ra một block 64-bit kết quả dưới dạng chuỗi nhị phân.
+
+Quan trọng: chương trình không được in các dòng log thừa, prompt hay round keys ra stdout khi CI sử dụng; chỉ in chuỗi nhị phân kết quả cuối cùng.
 
 ## 5. Padding đang dùng
 
-TODO_STUDENT: Giải thích cơ chế padding em dùng.
+Triển khai này sử dụng zero-padding đơn giản cho block cuối cùng:
 
-Gợi ý:
-- nếu plaintext dài hơn 64 bit thì chia block như thế nào
-- nếu thiếu bit thì pad bằng `0` ra sao
-- hạn chế của zero padding là gì
-- vì sao cách này chỉ phù hợp cho bài học nhập môn, không phải thiết kế an toàn hoàn chỉnh trong thực tế
+- Nếu plaintext dài hơn 64 bit, nó được chia thành các block 64 bit và xử lý tuần tự.
+- Nếu block cuối thiếu bit, sẽ thêm các ký tự '0' để đầy đủ 64 bit.
+
+Hạn chế:
+- Zero-padding có thể gây nhầm lẫn nếu plaintext gốc kết thúc bằng bit '0'; chương trình hiện không lưu metadata về độ dài nên không luôn phân biệt được padding với bit 0 hợp lệ.
+- Cách padding này chỉ phù hợp cho mục đích học tập; trong thực tế cần dùng chuẩn padding và/hoặc metadata về độ dài (ví dụ PKCS#7).
 
 ## 6. Tests bắt buộc
 

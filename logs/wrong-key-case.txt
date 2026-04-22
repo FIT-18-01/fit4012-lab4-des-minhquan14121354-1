@@ -1,0 +1,3 @@
+Kiểm thử khóa sai (chưa có):
+Giải mã với khóa không đúng và quan sát rằng plaintext không được khôi phục.
+Thay bằng đầu ra thực tế của tests/test_wrong_key_negative.sh
